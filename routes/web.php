@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -33,11 +34,6 @@ Route::get('/', function () {
 
 require __DIR__.'/auth.php';
 
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Auth::routes();
-
 Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
@@ -55,3 +51,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('profile/password', ['as' => 'profile.password', 'uses' => 'App\Http\Controllers\ProfileController@password']);
 });
 
+Route::get('/github/redirect', [OAuthController::class, 'githubRedirect'])->name('github.redirect');
+Route::get('/github/callback', [OAuthController::class, 'githubCallback'])->name('github.callback');
+
+Route::get('/google/redirect', [OAuthController::class, 'googleRedirect'])->name('google.redirect');
+Route::get('/google/callback', [OAuthController::class, 'googleCallback'])->name('google.callback');
+
+
+require __DIR__ . '/api.php';
