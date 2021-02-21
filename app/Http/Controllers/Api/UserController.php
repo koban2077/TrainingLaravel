@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
+
 
 class UserController extends Controller
 {
@@ -15,44 +15,42 @@ class UserController extends Controller
         return User::all();
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $newUserArr = $this->generate();
+        $password = Hash::make($request->input('password'));
 
         $newUser = new User([
-            'name' => $newUserArr['name'],
-            'email' => $newUserArr['email'],
-            'password' => $newUserArr['password']
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => $password
         ]);
 
         $newUser->save();
     }
 
-    public function update(User $user)
+    public function update(User $user, Request $request)
     {
-        $name = request('name');
-        $user->name = $name;
-        $user->save();
+        $arrayOfNewData = [];
+
+        if ($request->has('name'))
+        {
+            $arrayOfNewData['name'] = $request->input('name');
+        }
+        if($request->has('email'))
+        {
+            $arrayOfNewData['email'] = $request->input('email');
+        }
+        if($request->has('password'))
+        {
+            $password = Hash::make($request->input('password'));
+            $arrayOfNewData['password'] = $password;
+        }
+
+        $user->update($arrayOfNewData);
     }
 
     public function delete(User $user)
     {
         $user->delete();
-    }
-
-
-    private function generate()
-    {
-        $name = Str::random(4);
-        $email = $name . '@gmail.com';
-
-        $str = Str::random(8);
-        $hash = Hash::make($str);
-
-        return [
-                'name' => $name,
-                'email' => $email,
-                'password' => $hash
-        ];
     }
 }
