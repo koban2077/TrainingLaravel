@@ -30,23 +30,7 @@ class UserController extends Controller
 
     public function update(User $user, Request $request)
     {
-        $arrayOfNewData = [];
-
-        if ($request->has('name'))
-        {
-            $arrayOfNewData['name'] = $request->input('name');
-        }
-        if($request->has('email'))
-        {
-            $arrayOfNewData['email'] = $request->input('email');
-        }
-        if($request->has('password'))
-        {
-            $password = Hash::make($request->input('password'));
-            $arrayOfNewData['password'] = $password;
-        }
-
-        $user->update($arrayOfNewData);
+        $user->update($request->all());
     }
 
     public function delete(User $user)
