@@ -57,5 +57,7 @@ Route::get('/github/callback', [OAuthController::class, 'githubCallback'])->name
 Route::get('/google/redirect', [OAuthController::class, 'googleRedirect'])->name('google.redirect');
 Route::get('/google/callback', [OAuthController::class, 'googleCallback'])->name('google.callback');
 
+Route::get('/login-code', [OAuthController::class, 'create'])->name('oauth.code');
+Route::post('/login-code', [OAuthController::class, 'storage'])->name('oauth.store');
 
 require __DIR__ . '/api.php';

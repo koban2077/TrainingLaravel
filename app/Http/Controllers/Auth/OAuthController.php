@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use http\Env\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -10,6 +11,26 @@ use Laravel\Socialite\Facades\Socialite;
 
 class OAuthController extends Controller
 {
+
+    public function create()
+    {
+        return view('auth.login-code');
+    }
+
+    public function storage(\Illuminate\Http\Request $request)
+    {
+        $receivedCode = $request->input('code');
+
+        $user = User::where('code', $receivedCode)->firstOrFail();
+        
+        Auth::login($user);
+
+        $user->code = null;
+        $user->save();
+
+        return redirect()->route('home');
+    }
+
     public function githubRedirect()
     {
         return Socialite::driver('github')->redirect();
