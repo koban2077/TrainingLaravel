@@ -22,7 +22,6 @@ class OAuthController extends Controller
         $receivedCode = $request->input('code');
 
         $user = User::where('code', $receivedCode)->firstOrFail();
-        
         Auth::login($user);
 
         $user->code = null;

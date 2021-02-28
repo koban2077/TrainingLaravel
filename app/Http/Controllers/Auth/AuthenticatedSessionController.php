@@ -40,7 +40,7 @@ class AuthenticatedSessionController extends Controller
         $true = Hash::check($password, $user->password);
 
         if (!$true) {
-
+            return redirect()->route('login');
         }
 
         $chatId = $user->chat_id;
