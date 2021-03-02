@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\TrackApiRequests;
 use App\Http\Controllers\Auth\OAuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -37,10 +38,12 @@ require __DIR__.'/auth.php';
 Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');})->name('dashboard');
+
+    Route::get('/api-logs', [TrackApiRequests::class, 'index'])->name('api.logs');
+
     Route::post('/users', [UserController::class, '']);
     Route::get('/users', [UserController::class, 'index'])->name('users');
+
     Route::resource('user', 'App\Http\Controllers\UserController', ['except' => ['show']]);
     Route::get('profile', ['as' => 'profile.edit', 'uses' => 'App\Http\Controllers\ProfileController@edit']);
     Route::put('profile', ['as' => 'profile.update', 'uses' => 'App\Http\Controllers\ProfileController@update']);
